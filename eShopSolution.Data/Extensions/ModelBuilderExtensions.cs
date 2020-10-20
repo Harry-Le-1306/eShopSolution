@@ -1,5 +1,6 @@
 ﻿using eShopSolution.Data.Entities;
 using eShopSolution.Data.Enums;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -62,13 +63,13 @@ namespace eShopSolution.Data.Extensions
                 {
                     Id = 1,
                     ProductId = 1,
-                    Name = "Pierre Cardin Men T-Shirt",
+                    Name = "Pierre Cardin Men Shirt",
                     LanguageId = "en-AU",
-                    SeoAlias = "pierre-cardin-men-t-shirt",
-                    SeoDescription = "Pierre Cardin Men T-Shirt",
-                    SeoTitle = "Pierre Cardin Men T-Shirt",
-                    Details = "Pierre Cardin Men T-Shirt",
-                    Description = "Pierre Cardin Men T-Shirt"
+                    SeoAlias = "pierre-cardin-men-shirt",
+                    SeoDescription = "Pierre Cardin Men Shirt",
+                    SeoTitle = "Pierre Cardin Men Shirt",
+                    Details = "Pierre Cardin Men Shirt",
+                    Description = "Pierre Cardin Men Shirt"
                 },
                 new ProductTranslation()
                 {
@@ -86,6 +87,39 @@ namespace eShopSolution.Data.Extensions
             modelBuilder.Entity<ProductInCategory>().HasData(
                 new ProductInCategory() { ProductId = 1, CategoryId = 1 }
             );
+
+            // any guid
+            var roleId = new Guid("DE2E9C06-53E3-4378-AB03-54A7B24B452D");
+            var adminId = new Guid("513EA9B2-7DB6-42AC-8081-92569BDCA1D5");
+            modelBuilder.Entity<AppRole>().HasData(new AppRole
+            {
+                Id = roleId,
+                Name = "admin",
+                NormalizedName = "admin",
+                Description = "Administration role",
+            });
+
+            var hasher = new PasswordHasher<AppUser>();
+            modelBuilder.Entity<AppUser>().HasData(new AppUser
+            {
+                Id = adminId,
+                UserName = "admin",
+                NormalizedUserName = "admin",
+                Email = "harry.le@gmail.com",
+                NormalizedEmail = "harry.le@gmail.com",
+                EmailConfirmed = true,
+                PasswordHash = hasher.HashPassword(null, "Abcd1234$"),
+                SecurityStamp = string.Empty,
+                FirstName = "Harry",
+                LastName = "Le",
+                Dob = new DateTime(2020,10,20)
+            });
+
+            modelBuilder.Entity<IdentityUserRole<Guid>>().HasData(new IdentityUserRole<Guid>
+            {
+                RoleId = roleId,
+                UserId = adminId
+            });
         }
     }
 }
